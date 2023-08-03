@@ -16,9 +16,14 @@ import Link from '@mui/material/Link';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LoginIcon from '@mui/icons-material/Login';
 
-
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
+
+const items = [
+  { name: 'Bonds', description: 'This is the description for Bonds.' },
+  { name: 'Trades', description: 'This is the description for Trades.' },
+  { name: 'Maturity', description: 'This is the description for Maturity.' },
+];
 
 export default function FinancialDasboard() {
   return (
@@ -27,7 +32,7 @@ export default function FinancialDasboard() {
       <AppBar position="relative">
         <Toolbar>
           <Typography variant="h6" color="inherit" noWrap>
-            Financial Dasboard
+            Financial Dashboard
           </Typography>
         </Toolbar>
       </AppBar>
@@ -48,7 +53,7 @@ export default function FinancialDasboard() {
               color="text.primary"
               gutterBottom
             >
-              Financial Dasboard
+              Financial Dashboard
             </Typography>
             <Typography variant="h5" align="center" color="text.secondary" paragraph>
               A short description will be added here...
@@ -58,17 +63,17 @@ export default function FinancialDasboard() {
         <Container sx={{ py: 8 }} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {['Bonds', 'Trades', 'Maturity'].map((item, index) => (
+            {items.map((item, index) => (
               <Grid item key={index} xs={12} sm={6} md={4}>
                 <Card
                   sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
                 >
                   <CardContent sx={{ flexGrow: 1 }}>
                     <Typography gutterBottom variant="h5" component="h2">
-                      {item}
+                      {item.name}
                     </Typography>
                     <Typography>
-                      This is a card with the name {item}.
+                      {item.description}
                     </Typography>
                   </CardContent>
                   <CardActions>
@@ -80,7 +85,6 @@ export default function FinancialDasboard() {
           </Grid>
         </Container>
       </main>
-      
     </ThemeProvider>
   );
 }
