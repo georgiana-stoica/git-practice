@@ -1,40 +1,5 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import React, { useState } from "react"; // Fix the import statement for useState
-import './App.css';
-import SignIn from './components/SignIn';
-import FinancialDashboard from './components/FinancialDashboard';
-import { Route, Routes, Navigate } from 'react-router-dom'; // Import Navigate to handle redirection
-
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track login status
-
-  // Function to handle successful login and set isLoggedIn to true
-  const handleLogin = () => {
-    setIsLoggedIn(true);
-  };
-
-  return (
-    <>
-      <Routes>
-        {/* If isLoggedIn is false, render the SignIn component */}
-        <Route path="/login" element={<SignIn onLogin={handleLogin} />} />
-
-        {/* If isLoggedIn is true, render the FinancialDashboard component, otherwise, redirect to the login page */}
-        {isLoggedIn ? (
-          <Route path="/dashboard" element={<FinancialDashboard />} />
-        ) : (
-          <Navigate to="/login" />
-        )}
-      </Routes>
-    </>
-  );
-}
-
-export default App;
-// ... (Previous code)
-
-export default function SignIn({ onLogin }) { // Pass onLogin as a prop
-  // ... (Previous code)
+export default function SignIn() {
+  const history = useHistory(); // Initialize the useHistory hook
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -46,11 +11,10 @@ export default function SignIn({ onLogin }) { // Pass onLogin as a prop
       // Assuming AuthService.login returns a promise that resolves upon successful login
       const response = await AuthService.login(email, password);
       console.log(response); // Handle the response, e.g., redirect to another page on successful login
-      onLogin(); // Call onLogin prop to update the App's state
+
+      // Redirect to the dashboard page upon successful login
+      history.push('/dashboard');
     } catch (error) {
       console.error(error);
     }
   };
-
-  // ... (Previous code)
-}
