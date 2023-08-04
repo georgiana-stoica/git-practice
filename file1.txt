@@ -1,16 +1,27 @@
-import axios from 'axios';
+// Import the useNavigate hook from react-router-dom
+import { useNavigate } from 'react-router-dom';
 
-const BASE_URL = "http://127.0.0.1:8080";
+// Modify the SignIn component
+export default function SignIn() {
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
-const AuthService = {
-  login: async (email, password) => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const email = data.get('email');
+    const password = data.get('password');
+
     try {
-      const response = await axios.post(`${BASE_URL}/login`, { email, password });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-};
+      // Assuming AuthService.login returns a promise that resolves upon successful login
+      const response = await AuthService.login(email, password);
+      console.log(response); // Handle the response, e.g., redirect to another page on successful login
 
-export default AuthService;
+      // Redirect to the dashboard page upon successful login
+      navigate.push('/dashboard');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // The rest of the SignIn component remains the same
+}
