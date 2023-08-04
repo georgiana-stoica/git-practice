@@ -1,11 +1,21 @@
-function App() {
-  return (
-    <Router>
-      <Switch>
-        <Route path="/" exact component={SignIn} />
-        <Route path="/financial" component={Financial} />
-        <Route path="/dashboard" component={Navigation} />
-      </Switch>
-    </Router>
-  );
-}
+export default function SignIn() {
+  const history = useHistory(); // Get the history object from React Router
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    const email = data.get('email');
+    const password = data.get('password');
+
+    try {
+      const response = await AuthService.login(email, password);
+      console.log(response); // Handle the response, e.g., show a success message
+
+      // Redirect to the dashboard on successful login
+      history.push('/dashboard');
+    } catch (error) {
+      setError('Invalid credentials'); // Set the error message in case of failed login
+      console.error(error);
+    }
+  };
