@@ -1,33 +1,41 @@
- const [bonds, setBonds] = useState([]);
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-  useEffect( () =>{
-    getBondsFromAPI();},
-    []
-  );
+const Maturity = () => {
+  const [selectedDate, setSelectedDate] = useState('');
+  const [bonds, setBonds] = useState([]);
 
-  const getBondsFromAPI = () => {
-    getAllBonds()
-  .then(res => {
-      setBonds(res.data);
-  })
-  .catch(err => {
-      setBonds([]);
-      console.log(err);
-  })
-  }
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value);
+  };
+
+  useEffect(() => {
+    // Fetch bond data from the API based on the selected date
+    const fetchBonds = async () => {
+      try {
+        const response = await axios.get(`/api/bonds?maturityDate=${selectedDate}`);
+        setBonds(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (selectedDate) {
+      fetchBonds();
+    }
+  }, [selectedDate]);
 
   return (
-    <Row>
-    {bonds.map(bond=>(
-        <div className='container' key={bond.isin}>
-        <BondsDetail info={bond}  />
+    <div>
+      <label htmlFor="date">Select Date:</label>
+      <input type="date" id="date" value={selectedDate} onChange={handleDateChange} />
+      {bonds.length > 0 ? (
+        bonds.map((bond) => <div key={bond.ISIN}>{bond.ISIN}</div>)
+      ) : (
+        <div>No bonds due for maturity on the selected date.</div>
+      )}
+    </div>
+  );
+};
 
-        </div>
-    ))}
-    </Row>
-  
-    )
-}
-
-export default AllBonds
-
+export default Maturity;
