@@ -13,7 +13,7 @@ const Maturity = () => {
     // Fetch bond data from the API based on the selected date
     const fetchBonds = async () => {
       try {
-        const response = await axios.get(`/api/bonds?maturityDate=${selectedDate}`);
+        const response = await axios.get(`http://localhost:8080/bonds/maturity/workday/date?dateStr=${selectedDate}`);
         setBonds(response.data.map(bond => ({ ...bond, maturityDate: formatDate(bond.maturityDate) })));
       } catch (error) {
         console.error(error);
