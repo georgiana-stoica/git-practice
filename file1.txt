@@ -1,16 +1,20 @@
-import axios from 'axios';
+import AuthService from './AuthService';
 
-const BASE_URL = 'http://your-backend-api-url';
+export default function SignIn() {
+  const [error, setError] = useState('');
 
-const AuthService = {
-  login: async (email, password) => {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
+    const email = data.get('email');
+    const password = data.get('password');
+
     try {
-      const response = await axios.post(`${BASE_URL}/login`, { email, password });
-      return response.data;
+      const response = await AuthService.login(email, password);
+      console.log(response); // Handle the response, e.g., redirect to another page on successful login
     } catch (error) {
-      throw error;
+      setError('Invalid credentials'); // Set the error message in case of failed login
+      console.error(error);
     }
-  },
-};
-
-export default AuthService;
+  };
