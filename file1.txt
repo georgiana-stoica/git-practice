@@ -1,29 +1,33 @@
-import React, { useState } from 'react';
+ const [bonds, setBonds] = useState([]);
 
-const Maturity = ({ bonds }) => {
-  const [selectedDate, setSelectedDate] = useState('');
+  useEffect( () =>{
+    getBondsFromAPI();},
+    []
+  );
 
-  const handleDateChange = (event) => {
-    setSelectedDate(event.target.value);
-  };
-
-  // Filter bonds with the selected date as the maturity date
-  const filteredBonds = bonds.filter((bond) => {
-    // Assuming the bond object has a property called 'maturityDate' in the format 'YYYY-MM-DD'
-    return bond.maturityDate === selectedDate;
-  });
+  const getBondsFromAPI = () => {
+    getAllBonds()
+  .then(res => {
+      setBonds(res.data);
+  })
+  .catch(err => {
+      setBonds([]);
+      console.log(err);
+  })
+  }
 
   return (
-    <div>
-      <label htmlFor="date">Select Date:</label>
-      <input type="date" id="date" value={selectedDate} onChange={handleDateChange} />
-      {filteredBonds.length > 0 ? (
-        filteredBonds.map((bond) => <div key={bond.ISIN}>{bond.ISIN}</div>)
-      ) : (
-        <div>No bonds due for maturity on the selected date.</div>
-      )}
-    </div>
-  );
-};
+    <Row>
+    {bonds.map(bond=>(
+        <div className='container' key={bond.isin}>
+        <BondsDetail info={bond}  />
 
-export default Maturity;
+        </div>
+    ))}
+    </Row>
+  
+    )
+}
+
+export default AllBonds
+
