@@ -1,36 +1,29 @@
-import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import SignIn from './SignIn';
-import Financial from './Financial';
+import React, { useState } from 'react';
 
-function App() {
-  return (
-    <Router>
-      <Switch>
-        <Route path="/" exact component={SignIn} />
-        <Route path="/financial" component={FinancialDashboard} />
-      </Switch>
-    </Router>
-  );
-}
+const Maturity = ({ bonds }) => {
+  const [selectedDate, setSelectedDate] = useState('');
 
-export default App;
-
-export default function SignIn() {
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-
-    const email = data.get('email');
-    const password = data.get('password');
-
-    try {
-      const response = await AuthService.login(email, password);
-      console.log(response); // Handle the response, e.g., redirect to another page on successful login
-    } catch (error) {
-      setError('Invalid credentials'); // Set the error message in case of failed login
-      console.error(error);
-    }
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value);
   };
+
+  // Filter bonds with the selected date as the maturity date
+  const filteredBonds = bonds.filter((bond) => {
+    // Assuming the bond object has a property called 'maturityDate' in the format 'YYYY-MM-DD'
+    return bond.maturityDate === selectedDate;
+  });
+
+  return (
+    <div>
+      <label htmlFor="date">Select Date:</label>
+      <input type="date" id="date" value={selectedDate} onChange={handleDateChange} />
+      {filteredBonds.length > 0 ? (
+        filteredBonds.map((bond) => <div key={bond.ISIN}>{bond.ISIN}</div>)
+      ) : (
+        <div>No bonds due for maturity on the selected date.</div>
+      )}
+    </div>
+  );
+};
+
+export default Maturity;
