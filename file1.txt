@@ -1,50 +1,53 @@
-import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import React, { useState } from 'react';
+import dayjs from 'dayjs';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
-// Sample data for bonds
 const bondsData = [
-  { date: '2022-04-15', details: 'Details for bond 1' },
-  { date: '2022-04-17', details: 'Details for bond 2' },
-  { date: '2022-04-20', details: 'Details for bond 3' },
-  // ... more bond objects
+  // ... your bond data
 ];
 
-export default function DateCalendarValue() {
-  const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(dayjs('2022-04-17'));
+function DateCalendarValue() {
+  const [selectedDate, setSelectedDate] = useState(dayjs('2022-04-17'));
 
-  const handleDateChange = (newDate: Dayjs | null) => {
+  const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
   };
 
-  // Calculate date range for bonds
-  const startDate = selectedDate?.subtract(5, 'day');
-  const endDate = selectedDate?.add(5, 'day');
+  const startDate = selectedDate.subtract(5, 'day');
+  const endDate = selectedDate.add(5, 'day');
 
   // Filter bonds within the calculated date range
   const filteredBonds = bondsData.filter(bond =>
-    selectedDate && dayjs(bond.date).isBetween(startDate, endDate, null, '[]')
+    selectedDate && dayjs(bond.maturityDate).isBetween(startDate, endDate, null, '[]')
   );
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateCalendar', 'DateCalendar']}>
-        <DemoItem label="Controlled calendar">
+        <DemoItem label="Choose date">
           <DateCalendar value={selectedDate} onChange={handleDateChange} />
         </DemoItem>
       </DemoContainer>
 
       <div>
         {filteredBonds.map(bond => (
-          <div key={bond.date}>
-            <h2>{dayjs(bond.date).format('YYYY-MM-DD')}</h2>
-            <p>{bond.details}</p>
+          <div key={bond.maturityDate} className="bond-container">
+            <h2>{dayjs(bond.maturityDate).format('YYYY-MM-DD')}</h2>
+            <p>{bond.isin}</p>
+            {[...Array(11)].map((_, index) => (
+              <div key={index} className="bond-box">
+                Bond Box {index + 1}
+                <p>{bond.details}</p>
+              </div>
+            ))}
           </div>
         ))}
       </div>
     </LocalizationProvider>
   );
 }
+
+export default DateCalendarValue;
