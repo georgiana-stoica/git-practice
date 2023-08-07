@@ -1,18 +1,54 @@
-/* Maturity.css */
+import React, { useState } from 'react';
+import dayjs from 'dayjs';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import './Maturity.css';
 
-/* Add a container around bond-containers to create a flex container */
-.bond-list {
-  display: flex;
-  flex-wrap: wrap; /* Allow wrapping to multiple rows */
-  gap: 10px; /* Gap between bond-containers */
+// ... (bondsData and DateCalendarValue functions remain the same)
+
+function DateCalendarValue() {
+  const [selectedDate, setSelectedDate] = useState(dayjs('2021-08-09'));
+
+  const handleDateChange = (newDate) => {
+    setSelectedDate(newDate);
+  };
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DateCalendar', 'DateCalendar']}>
+        <DemoItem label="Choose date">
+          <DateCalendar value={selectedDate} onChange={handleDateChange} />
+        </DemoItem>
+      </DemoContainer>
+
+      <div className="bond-containers">
+        {[...Array(11)].map((_, index) => {
+          const currentDate = selectedDate.subtract(5, 'day').add(index, 'day');
+          const filteredBonds = bondsData.filter(bond =>
+            dayjs(bond.maturityDate).isSame(currentDate, 'day')
+          );
+
+          return (
+            <div key={currentDate.format('YYYY-MM-DD')} className="bond-container">
+              <h2>{currentDate.format('YYYY-MM-DD')}</h2>
+              {filteredBonds.length === 0 ? (
+                <p>No bonds existing for this day.</p>
+              ) : (
+                filteredBonds.map(bond => (
+                  <div key={bond.isin} className="bond-box">
+                    <p>{bond.isin}</p>
+                    <p>{bond.details}</p>
+                  </div>
+                ))
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </LocalizationProvider>
+  );
 }
 
-/* Adjust bond-container styles */
-.bond-container {
-  flex: 1; /* Allow each bond-container to take equal width */
-  border: 1px solid #ccc;
-  padding: 10px;
-  background-color: #f5f5f5;
-  margin: 5px;
-  text-align: center;
-}
+export default DateCalendarValue;
