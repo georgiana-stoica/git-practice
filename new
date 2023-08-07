@@ -1,4 +1,24 @@
-// ... (import statements and other code)
+Bond{
+isin	string
+bondCurrency	string
+cusip	string
+faceValue	integer($int32)
+issuerName	string
+bondMaturityDate	string($date-time)
+status	string
+type	string
+employeeId	integer($int32)
+employee	Employee{...}
+trades	[...]
+}
+import React, { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import './Maturity.css';
+import { getBondsByMaturity } from '../services/maturity-service';
 
 const Maturity = () => {
     const [selectedDate, setSelectedDate] = useState(dayjs('2021-08-12'));
@@ -11,7 +31,17 @@ const Maturity = () => {
     const getMaturity = () => {
         getBondsByMaturity()
             .then(res => {
-                setBondsData(res.data);
+                console.log("API Response:", res.data); // Check the response data
+                if (Array.isArray(res.data)) {
+                    const bondsWithIsoDates = res.data.map(bond => ({
+                        ...bond,
+                        maturityDate: dayjs(bond.maturityDate).format('YYYY-MM-DDTHH:mm:ssZ')
+                    }));
+                    setBondsData(bondsWithIsoDates);
+                } else {
+                    setBondsData([]);
+                    console.log("Invalid data format:", res.data);
+                }
             })
             .catch(err => {
                 setBondsData([]);
@@ -25,14 +55,17 @@ const Maturity = () => {
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-            {/* ... (DateCalendar component) */}
+            <DemoContainer components={['DateCalendar', 'DateCalendar']}>
+                <DemoItem label="Choose date">
+                    <DateCalendar value={selectedDate} onChange={handleDateChange} />
+                </DemoItem>
+            </DemoContainer>
 
             <div className="bond-list">
                 {[...Array(11)].map((_, index) => {
                     const currentDate = selectedDate.subtract(5, 'day').add(index, 'day');
                     const filteredBonds = bondsData.filter(bond =>
-                        // Compare Date objects
-                        new Date(bond.maturityDate).toDateString() === currentDate.toDate().toDateString()
+                        dayjs(bond.maturityDate).isSame(currentDate, 'day')
                     );
 
                     return (
@@ -59,3 +92,4 @@ const Maturity = () => {
 };
 
 export default Maturity;
+http://localhost:8080/bonds/maturity
