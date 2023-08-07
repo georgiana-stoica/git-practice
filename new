@@ -1,86 +1,59 @@
-import React from 'react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
+/* Maturity.css */
 
-const BondCard = ({ bond }) => {
-  return (
-    <Card sx={{ minWidth: 275 }}>
-      <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {bond.issuerName}
-        </Typography>
-        <Typography variant="h5" component="div">
-          ISIN: {bond.isin}
-        </Typography>
-        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-          Type: {bond.type}
-        </Typography>
-        <Typography variant="body2">
-          Maturity Date: {bond.maturityDate}
-        </Typography>
-      </CardContent>
-    </Card>
-  );
-};
-
-export default BondCard;
-
-
-import React, { useState } from 'react';
-import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import './Maturity.css';
-import BondCard from './BondCard'; // Import the BondCard component
-
-const bondsData = [
-  // Your bonds data...
-];
-
-function Maturity() {
-  const [selectedDate, setSelectedDate] = useState(dayjs('2021-08-09'));
-
-  const handleDateChange = (newDate) => {
-    setSelectedDate(newDate);
-  };
-
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DateCalendar', 'DateCalendar']}>
-        <DemoItem label="Choose date">
-          <DateCalendar value={selectedDate} onChange={handleDateChange} />
-        </DemoItem>
-      </DemoContainer>
-
-      <div>
-        {[...Array(11)].map((_, index) => {
-          const currentDate = selectedDate.subtract(5, 'day').add(index, 'day');
-          const filteredBonds = bondsData.filter((bond) =>
-            dayjs(bond.maturityDate).isSame(currentDate, 'day')
-          );
-
-          return (
-            <div
-              key={currentDate.format('YYYY-MM-DD')}
-              className="bond-container"
-            >
-              <h2>{currentDate.format('YYYY-MM-DD')}</h2>
-              {filteredBonds.length === 0 ? (
-                <p>No bonds existing for this day.</p>
-              ) : (
-                filteredBonds.map((bond) => (
-                  <BondCard key={bond.isin} bond={bond} />
-                ))
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </LocalizationProvider>
-  );
+/* Styles for the bond containers */
+.bond-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
 }
 
-export default Maturity;
+/* Styles for the bond container header */
+.bond-container-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.bond-container h2 {
+  font-size: 1.2rem;
+}
+
+/* Styles for the bond boxes */
+.bond-box-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.bond-box {
+  flex: 0 0 calc(33.33% - 20px); /* Three boxes per row */
+  padding: 10px;
+  border: 1px solid #ddd;
+  background-color: #fff;
+}
+
+/* Styles for the selected date */
+.selected-date {
+  margin-top: 20px;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Styles for the DateCalendar */
+.DateCalendar {
+  margin-top: 20px;
+}
+
+/* Styles for the "No bonds existing" message */
+.no-bonds-message {
+  margin-top: 10px;
+  color: #999;
+}
