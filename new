@@ -1,6 +1,3 @@
-/* Maturity.css */
-
-/* Styles for the bond containers */
 .bond-container {
   display: flex;
   flex-direction: column;
@@ -9,25 +6,26 @@
   padding: 20px;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
-  width: 100%; /* Ensure each slide takes full width */
-  box-sizing: border-box;
+  border-radius: 20px; /* Adjust border radius for rounded corners */
 }
 
 /* Styles for the bond boxes */
-.bond-box-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-
 .bond-box {
   flex: 0 0 calc(50% - 20px); /* Two boxes per row */
   padding: 10px;
   border: 1px solid #ddd;
   background-color: #fff;
+  border-radius: 10px; /* Adjust border radius for rounded corners */
+  margin: 10px; /* Add some space between the boxes */
   box-sizing: border-box;
 }
 
 /* ... other styles ... */
+In this example, I've added border-radius: 20px; to the .bond-container class to make the bond containers more rounded, and I've kept border-radius: 10px; for the .bond-box class to maintain the rounded corners for the boxes.
+
+Feel free to adjust the values of border-radius and other styles to achieve the desired appearance.
+
+
+
+
+
