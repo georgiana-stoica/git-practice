@@ -1,54 +1,46 @@
+Copy code
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import './Maturity.css';
 
-// ... (other imports)
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center', // Center the grid list horizontally
+    overflow: 'hidden',
+  },
+  gridList: {
+    flexWrap: 'nowrap',
+  },
+}));
 
-import SingleLineGridList from './SingleLineGridList'; // Import the grid list component
+// Example bond data for each day
+const bondsData = [
+  { maturityDate: '2021-08-09' }, // Adjust with actual data
+  { maturityDate: '2021-08-10' }, // Adjust with actual data
+  { maturityDate: '2021-08-11' }, // Adjust with actual data
+];
 
+export default function SingleLineGridList() {
+  const classes = useStyles();
 
-/* Maturity.css */
-
-/* Center the grid and date containers */
-.root {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-top: 20px; /* Add some margin at the top */
-}
-
-/* Style the bond containers */
-.bond-container {
-  border: 1px solid #ccc;
-  margin: 20px 0;
-  padding: 10px;
-  text-align: center;
-  background-color: #f7f7f7;
-  border-radius: 8px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Style the bond boxes */
-.bond-box {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Style the grid list */
-.gridList {
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  width: 100%;
-}
-
-/* Style the grid list tiles */
-.gridListTile {
-  width: 200px;
-  margin-right: 16px;
+  return (
+    <div className={classes.root}>
+      <GridList className={classes.gridList} cols={2.5}>
+        {bondsData.map((bond, index) => (
+          <GridListTile key={index}>
+            <GridListTileBar title={dayjs(bond.maturityDate).format('YYYY-MM-DD')} />
+          </GridListTile>
+        ))}
+      </GridList>
+    </div>
+  );
 }
