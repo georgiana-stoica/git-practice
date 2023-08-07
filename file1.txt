@@ -24,6 +24,9 @@ function DateCalendarValue() {
     selectedDate && dayjs(bond.maturityDate).isBetween(startDate, endDate, null, '[]')
   );
 
+  // Sort the filteredBonds array based on maturity dates
+  const sortedBonds = filteredBonds.sort((a, b) => dayjs(a.maturityDate).diff(dayjs(b.maturityDate)));
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={['DateCalendar', 'DateCalendar']}>
@@ -33,7 +36,7 @@ function DateCalendarValue() {
       </DemoContainer>
 
       <div>
-        {filteredBonds.map(bond => (
+        {sortedBonds.map(bond => (
           <div key={bond.maturityDate} className="bond-container">
             <h2>{dayjs(bond.maturityDate).format('YYYY-MM-DD')}</h2>
             <p>{bond.isin}</p>
@@ -45,6 +48,14 @@ function DateCalendarValue() {
             ))}
           </div>
         ))}
+
+        {/* Display non-existing bonds for the dates within the range */}
+        {dayjs(startDate).isBefore(endDate) &&
+          dayjs(endDate).isBefore(dayjs()) && (
+            <div className="no-bonds-container">
+              <p>There are no bonds for some dates in the selected range.</p>
+            </div>
+          )}
       </div>
     </LocalizationProvider>
   );
