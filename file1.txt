@@ -1,31 +1,65 @@
-.bond-container {
-  background-color: #f2f2f2;
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 20px;
+import React, { useState } from 'react';
+import dayjs from 'dayjs';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+
+const bondsData = [
+  // ... your bond data
+];
+
+function DateCalendarValue() {
+  const [selectedDate, setSelectedDate] = useState(dayjs('2022-04-17'));
+
+  const handleDateChange = (newDate) => {
+    setSelectedDate(newDate);
+  };
+
+  // Calculate date range for bonds
+  const startDate = selectedDate.subtract(5, 'day');
+  const endDate = selectedDate.add(5, 'day');
+
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DateCalendar', 'DateCalendar']}>
+        <DemoItem label="Choose date">
+          <DateCalendar value={selectedDate} onChange={handleDateChange} />
+        </DemoItem>
+      </DemoContainer>
+
+      <div>
+        {[...Array(11)].map((_, index) => {
+          const currentDate = selectedDate.subtract(5, 'day').add(index, 'day');
+          const filteredBonds = bondsData.filter(bond =>
+            dayjs(bond.maturityDate).isSame(currentDate, 'day')
+          );
+          const dayOfWeekName = daysOfWeek[currentDate.getDay()];
+
+          return (
+            <div key={currentDate.format('YYYY-MM-DD')} className="bond-container">
+              <div className="bond-header">{currentDate.format('YYYY-MM-DD')} - {dayOfWeekName}</div>
+              <div className="bond-body">
+                {filteredBonds.length === 0 ? (
+                  <p>No bonds existing for this day.</p>
+                ) : (
+                  filteredBonds.map(bond => (
+                    <div key={bond.isin} className="bond-box">
+                      <p>{bond.isin}</p>
+                      <p>{bond.details}</p>
+                      <button>See Details</button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </LocalizationProvider>
+  );
 }
 
-.bond-header {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-
-.bond-body {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.bond-box {
-  background-color: #fff;
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  width: calc(33.33% - 10px);
-}
-
-.bond-box p {
-  font-size: 16px;
-  line-height: 1.5;
-  margin-bottom: 0;
-}
+export default DateCalendarValue;
