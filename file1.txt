@@ -1,50 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import * as React from 'react';
+import dayjs, { Dayjs } from 'dayjs';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
-const Maturity = () => {
-  const [selectedDate, setSelectedDate] = useState('');
-  const [bonds, setBonds] = useState([]);
+// Exemplu de date pentru obligațiuni
+const bondsData = [
+  { date: '2022-04-15', details: 'Detalii obligațiune 1' },
+  { date: '2022-04-17', details: 'Detalii obligațiune 2' },
+  { date: '2022-04-20', details: 'Detalii obligațiune 3' },
+  // ... mai multe obiecte
+];
 
-  const handleDateChange = (event) => {
-    setSelectedDate(event.target.value);
+export default function DateCalendarValue() {
+  const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(dayjs('2022-04-17'));
+
+  const handleDateChange = (newDate: Dayjs | null) => {
+    setSelectedDate(newDate);
   };
 
-  useEffect(() => {
-    // Fetch bond data from the API based on the selected date
-    const fetchBonds = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/bonds/maturity/workday/date?dateStr=${selectedDate}`);
-        setBonds(response.data.map(bond => ({ ...bond, maturityDate: formatDate(bond.maturityDate) })));
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    if (selectedDate) {
-      fetchBonds();
-    }
-  }, [selectedDate]);
-
-  // Helper function to format timestamp to 'YYYY-MM-DD' date string
-  const formatDate = (timestamp) => {
-    const date = new Date(timestamp);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
+  // Filtrăm obligațiunile pentru a obține cele corespunzătoare datei selectate și celor dinainte și după
+  const filteredBonds = bondsData.filter(bond =>
+    selectedDate && Math.abs(dayjs(bond.date).diff(selectedDate, 'days')) <= 5
+  );
 
   return (
-    <div>
-      <label htmlFor="date">Select Date:</label>
-      <input type="date" id="date" value={selectedDate} onChange={handleDateChange} />
-      {bonds.length > 0 ? (
-        bonds.map((bond) => <div key={bond.ISIN}>{bond.ISIN}</div>)
-      ) : (
-        <div>No bonds due for maturity on the selected date.</div>
-      )}
-    </div>
-  );
-};
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DateCalendar', 'DateCalendar']}>
+        <DemoItem label="Controlled calendar">
+          <DateCalendar value={selectedDate} onChange={handleDateChange} />
+        </DemoItem>
+      </DemoContainer>
 
-export default Maturity;
+      <div>
+        {filteredBonds.map(bond => (
+          <div key={bond.date}>
+            <h2>{dayjs(bond.date).format('YYYY-MM-DD')}</h2>
+            <p>{bond.details}</p>
+          </div>
+        ))}
+      </div>
+    </LocalizationProvider>
+  );
+}
