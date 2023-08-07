@@ -1,68 +1,45 @@
-/* Maturity.css */
+function Maturity() {
+  // ... your existing code ...
 
-/* Styles for the bond containers */
-.bond-container-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between; /* Adjust as needed */
-  margin: 20px;
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DateCalendar', 'DateCalendar']}>
+        <DemoItem label="Choose date:">
+          <DateCalendar value={selectedDate} onChange={handleDateChange} />
+        </DemoItem>
+      </DemoContainer>
+
+      <Slider dots infinite slidesToShow={2} slidesToScroll={2}>
+        {[...Array(11)].map((_, index) => {
+          const currentDate = selectedDate.subtract(5, 'day').add(index, 'day');
+          const filteredBonds = bondsData.filter((bond) =>
+            dayjs(bond.maturityDate).isSame(currentDate, 'day')
+          );
+
+          return (
+            <div
+              key={currentDate.format('YYYY-MM-DD')}
+              className="bond-container"
+            >
+              <h2>{currentDate.format('YYYY-MM-DD')}</h2>
+              {filteredBonds.length === 0 ? (
+                <p>No bonds existing for this day.</p>
+              ) : (
+                filteredBonds.map((bond) => (
+                  <Cards key={bond.isin} bond={bond} />
+                ))
+              )}
+            </div>
+          );
+        })}
+      </Slider>
+    </LocalizationProvider>
+  );
 }
 
-.bond-container {
-  flex: 0 0 calc(50% - 20px); /* Two containers per row */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  margin-bottom: 20px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
+export default Maturity;
 
-/* Styles for the bond container header */
-.bond-container-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 10px;
-}
 
-.bond-container h2 {
-  font-size: 1.2rem;
-}
-
-/* Styles for the bond boxes */
-.bond-box-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.bond-box {
-  flex: 0 0 calc(33.33% - 20px); /* Three boxes per row */
-  padding: 10px;
-  border: 1px solid #ddd;
-  background-color: #fff;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* Styles for the selected date */
-.selected-date {
-  margin-top: 20px;
-  font-size: 1.2rem;
-  font-weight: bold;
-}
-
-/* Styles for the DateCalendar */
-.DateCalendar {
-  margin-top: 20px;
-}
-
-/* Styles for the "No bonds existing" message */
-.no-bonds-message {
-  margin-top: 10px;
-  color: #999;
-}
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
