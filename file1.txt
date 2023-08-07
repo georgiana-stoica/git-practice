@@ -16,16 +16,9 @@ function DateCalendarValue() {
     setSelectedDate(newDate);
   };
 
+  // Calculate date range for bonds
   const startDate = selectedDate.subtract(5, 'day');
   const endDate = selectedDate.add(5, 'day');
-
-  // Filter bonds within the calculated date range
-  const filteredBonds = bondsData.filter(bond =>
-    selectedDate && dayjs(bond.maturityDate).isBetween(startDate, endDate, null, '[]')
-  );
-
-  // Sort the filteredBonds array based on maturity dates
-  const sortedBonds = filteredBonds.sort((a, b) => dayjs(a.maturityDate).diff(dayjs(b.maturityDate)));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -36,26 +29,28 @@ function DateCalendarValue() {
       </DemoContainer>
 
       <div>
-        {sortedBonds.map(bond => (
-          <div key={bond.maturityDate} className="bond-container">
-            <h2>{dayjs(bond.maturityDate).format('YYYY-MM-DD')}</h2>
-            <p>{bond.isin}</p>
-            {[...Array(11)].map((_, index) => (
-              <div key={index} className="bond-box">
-                Bond Box {index + 1}
-                <p>{bond.details}</p>
-              </div>
-            ))}
-          </div>
-        ))}
+        {[...Array(11)].map((_, index) => {
+          const currentDate = selectedDate.subtract(5, 'day').add(index, 'day');
+          const filteredBonds = bondsData.filter(bond =>
+            dayjs(bond.maturityDate).isSame(currentDate, 'day')
+          );
 
-        {/* Display non-existing bonds for the dates within the range */}
-        {dayjs(startDate).isBefore(endDate) &&
-          dayjs(endDate).isBefore(dayjs()) && (
-            <div className="no-bonds-container">
-              <p>There are no bonds for some dates in the selected range.</p>
+          return (
+            <div key={currentDate.format('YYYY-MM-DD')} className="bond-container">
+              <h2>{currentDate.format('YYYY-MM-DD')}</h2>
+              {filteredBonds.length === 0 ? (
+                <p>No bonds existing for this day.</p>
+              ) : (
+                filteredBonds.map(bond => (
+                  <div key={bond.isin} className="bond-box">
+                    <p>{bond.isin}</p>
+                    <p>{bond.details}</p>
+                  </div>
+                ))
+              )}
             </div>
-          )}
+          );
+        })}
       </div>
     </LocalizationProvider>
   );
