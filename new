@@ -1,54 +1,20 @@
-import React, { useState } from 'react';
-import dayjs from 'dayjs';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import './Maturity.css';
-
-// ... (bondsData and DateCalendarValue functions remain the same)
-
-function DateCalendarValue() {
-  const [selectedDate, setSelectedDate] = useState(dayjs('2021-08-09'));
-
-  const handleDateChange = (newDate) => {
-    setSelectedDate(newDate);
-  };
-
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DateCalendar', 'DateCalendar']}>
-        <DemoItem label="Choose date">
-          <DateCalendar value={selectedDate} onChange={handleDateChange} />
-        </DemoItem>
-      </DemoContainer>
-
-      <div className="bond-containers">
-        {[...Array(11)].map((_, index) => {
-          const currentDate = selectedDate.subtract(5, 'day').add(index, 'day');
-          const filteredBonds = bondsData.filter(bond =>
-            dayjs(bond.maturityDate).isSame(currentDate, 'day')
-          );
-
-          return (
-            <div key={currentDate.format('YYYY-MM-DD')} className="bond-container">
-              <h2>{currentDate.format('YYYY-MM-DD')}</h2>
-              {filteredBonds.length === 0 ? (
-                <p>No bonds existing for this day.</p>
-              ) : (
-                filteredBonds.map(bond => (
-                  <div key={bond.isin} className="bond-box">
-                    <p>{bond.isin}</p>
-                    <p>{bond.details}</p>
-                  </div>
-                ))
-              )}
-            </div>
-          );
-        })}
-      </div>
-    </LocalizationProvider>
-  );
+/* Maturity.css */
+.bond-containers {
+  display: flex;            /* Use flexbox layout */
+  justify-content: center; /* Center the content horizontally */
+  flex-wrap: wrap;          /* Wrap containers to the next line if needed */
+  gap: 20px;                /* Add some space between containers */
 }
 
-export default DateCalendarValue;
+.bond-container {
+  width: 300px; /* Set a fixed width for each container */
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 10px;
+}
+
+.bond-box {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-top: 10px;
+}
