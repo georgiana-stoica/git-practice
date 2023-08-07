@@ -1,16 +1,23 @@
 /* Maturity.css */
 
 /* Styles for the bond containers */
+.bond-container-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; /* Adjust as needed */
+  margin: 20px;
+}
+
 .bond-container {
+  flex: 0 0 calc(50% - 20px); /* Two containers per row */
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 20px;
   padding: 20px;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
-  width: 300px; /* Adjust the width for better aesthetics */
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  margin-bottom: 20px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Styles for the bond container header */
@@ -29,16 +36,17 @@
 /* Styles for the bond boxes */
 .bond-box-container {
   display: flex;
-  flex-direction: column; /* Display boxes vertically */
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 10px;
 }
 
 .bond-box {
+  flex: 0 0 calc(33.33% - 20px); /* Three boxes per row */
   padding: 10px;
   border: 1px solid #ddd;
   background-color: #fff;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Styles for the selected date */
