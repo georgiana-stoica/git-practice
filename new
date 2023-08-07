@@ -11,9 +11,17 @@
   background-color: #f9f9f9;
 }
 
+/* Styles for the bond container header */
+.bond-container-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
 .bond-container h2 {
   font-size: 1.2rem;
-  margin-bottom: 10px;
 }
 
 /* Styles for the bond boxes */
