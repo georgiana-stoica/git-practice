@@ -1,5 +1,5 @@
-import * as React from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import React, { useState } from 'react';
+import dayjs from 'dayjs'; // Import Dayjs type
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -13,16 +13,17 @@ const bondsData = [
   // ... more bond objects
 ];
 
-export default function DateCalendarValue() {
-  const [selectedDate, setSelectedDate] = React.useState<Dayjs | null>(dayjs('2022-04-17'));
+function DateCalendarValue() {
+  const [selectedDate, setSelectedDate] = useState(dayjs('2022-04-17'));
 
-  const handleDateChange = (newDate: Dayjs | null) => {
+  // Explicitly use Dayjs type here
+  const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
   };
 
   // Calculate date range for bonds
-  const startDate = selectedDate?.subtract(5, 'day');
-  const endDate = selectedDate?.add(5, 'day');
+  const startDate = selectedDate.subtract(5, 'day');
+  const endDate = selectedDate.add(5, 'day');
 
   // Filter bonds within the calculated date range
   const filteredBonds = bondsData.filter(bond =>
@@ -54,3 +55,5 @@ export default function DateCalendarValue() {
     </LocalizationProvider>
   );
 }
+
+export default DateCalendarValue;
