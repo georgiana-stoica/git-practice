@@ -1,46 +1,68 @@
-/* Styling for the bond containers wrapper */
-.bonds-container-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  max-width: 100%;
+import React, { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
+import axios from 'axios';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+
+function DateCalendarValue() {
+  const [selectedDate, setSelectedDate] = useState(dayjs('2022-04-17'));
+  const [bondsData, setBondsData] = useState([]);
+
+  useEffect(() => {
+    // Fetch bondsData from the database using Axios
+    axios.get('your_api_endpoint')
+      .then(response => {
+        setBondsData(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
+
+  const handleDateChange = (newDate) => {
+    setSelectedDate(newDate);
+  };
+
+  // Calculate date range for bonds
+  const startDate = selectedDate.subtract(5, 'day');
+  const endDate = selectedDate.add(5, 'day');
+
+  return (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer components={['DateCalendar', 'DateCalendar']}>
+        <DemoItem label="Choose date">
+          <DateCalendar value={selectedDate} onChange={handleDateChange} />
+        </DemoItem>
+      </DemoContainer>
+
+      <div>
+        {[...Array(11)].map((_, index) => {
+          const currentDate = selectedDate.subtract(5, 'day').add(index, 'day');
+          const filteredBonds = bondsData.filter(bond =>
+            dayjs(bond.maturityDate).isSame(currentDate, 'day')
+          );
+
+          return (
+            <div key={currentDate.format('YYYY-MM-DD')} className="bond-container">
+              <h2>{currentDate.format('YYYY-MM-DD')}</h2>
+              {filteredBonds.length === 0 ? (
+                <p>No bonds existing for this day.</p>
+              ) : (
+                filteredBonds.map(bond => (
+                  <div key={bond.isin} className="bond-box">
+                    <p>{bond.isin}</p>
+                    <p>{bond.details}</p>
+                  </div>
+                ))
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </LocalizationProvider>
+  );
 }
 
-/* Styling for the bond container */
-.bond-container {
-  border: 1px solid #ccc;
-  padding: 20px;
-  margin: 10px;
-  flex: 1 1 calc(25% - 40px); /* Adjust the width as needed */
-  min-width: 200px;
-}
-
-/* Styling for the bond boxes */
-.bond-box {
-  border: 1px solid #ddd;
-  background-color: #f7f7f7;
-  padding: 10px;
-  margin-top: 10px;
-}
-
-/* Styling for the "no bonds existing" message */
-.no-bonds-container {
-  border: 1px solid #ccc;
-  padding: 20px;
-  margin-top: 10px;
-  background-color: #f2f2f2;
-  color: #555;
-}
-
-/* Centering the contents */
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-/* Centering the date picker */
-MuiPickersBasePicker-root {
-  display: flex;
-  justify-content: center;
-}
+export default DateCalendarValue;
