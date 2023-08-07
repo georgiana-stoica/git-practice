@@ -1,31 +1,17 @@
+/* Maturity.css */
+
+/* ... previous styles ... */
+
+/* Styles for the bond containers */
 .bond-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 20px;
+  margin: 20px; /* Adjust the margin to control the space between containers */
   padding: 20px;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
-  border-radius: 20px; /* Adjust border radius for rounded corners */
-}
-
-/* Styles for the bond boxes */
-.bond-box {
-  flex: 0 0 calc(50% - 20px); /* Two boxes per row */
-  padding: 10px;
-  border: 1px solid #ddd;
-  background-color: #fff;
-  border-radius: 10px; /* Adjust border radius for rounded corners */
-  margin: 10px; /* Add some space between the boxes */
-  box-sizing: border-box;
+  border-radius: 20px;
 }
 
 /* ... other styles ... */
-In this example, I've added border-radius: 20px; to the .bond-container class to make the bond containers more rounded, and I've kept border-radius: 10px; for the .bond-box class to maintain the rounded corners for the boxes.
-
-Feel free to adjust the values of border-radius and other styles to achieve the desired appearance.
-
-
-
-
-
