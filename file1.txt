@@ -1,28 +1,47 @@
-.bond-box button {
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  padding: 8px 16px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-.bond-container {
+/* Styling for the bond containers wrapper */
+.bonds-wrapper {
   display: flex;
-  flex-wrap: wrap;
-  background-color: #f2f2f2;
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 20px;
+  overflow-x: auto;
 }
-.bond-box {
-  background-color: #fff;
+
+/* Styling for the bond containers */
+.bond-container {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
   border: 1px solid #ccc;
+  padding: 20px;
+  margin-right: 20px;
+  min-width: 200px; /* Adjust as needed */
+}
+
+/* Styling for the bond boxes */
+.bond-box {
+  border: 1px solid #ddd;
+  background-color: #f7f7f7;
   padding: 10px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  width: calc(33.33% - 10px);
+  margin-top: 10px;
+}
+
+/* Styling for the "no bonds existing" message */
+.no-bonds-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin-top: 10px;
+  background-color: #f2f2f2;
+  color: #555;
+}
+
+/* Centering the contents */
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Centering the date picker */
+MuiPickersBasePicker-root {
+  display: flex;
+  justify-content: center;
 }
