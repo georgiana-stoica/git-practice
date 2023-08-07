@@ -5,12 +5,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
-// Exemplu de date pentru obligațiuni
+// Sample data for bonds
 const bondsData = [
-  { date: '2022-04-15', details: 'Detalii obligațiune 1' },
-  { date: '2022-04-17', details: 'Detalii obligațiune 2' },
-  { date: '2022-04-20', details: 'Detalii obligațiune 3' },
-  // ... mai multe obiecte
+  { date: '2022-04-15', details: 'Details for bond 1' },
+  { date: '2022-04-17', details: 'Details for bond 2' },
+  { date: '2022-04-20', details: 'Details for bond 3' },
+  // ... more bond objects
 ];
 
 export default function DateCalendarValue() {
@@ -20,9 +20,13 @@ export default function DateCalendarValue() {
     setSelectedDate(newDate);
   };
 
-  // Filtrăm obligațiunile pentru a obține cele corespunzătoare datei selectate și celor dinainte și după
+  // Calculate date range for bonds
+  const startDate = selectedDate?.subtract(5, 'day');
+  const endDate = selectedDate?.add(5, 'day');
+
+  // Filter bonds within the calculated date range
   const filteredBonds = bondsData.filter(bond =>
-    selectedDate && Math.abs(dayjs(bond.date).diff(selectedDate, 'days')) <= 5
+    selectedDate && dayjs(bond.date).isBetween(startDate, endDate, null, '[]')
   );
 
   return (
