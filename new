@@ -9,6 +9,8 @@
   padding: 20px;
   border: 1px solid #ccc;
   background-color: #f9f9f9;
+  width: 300px; /* Adjust the width for better aesthetics */
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
 
 /* Styles for the bond container header */
@@ -27,17 +29,16 @@
 /* Styles for the bond boxes */
 .bond-box-container {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column; /* Display boxes vertically */
   gap: 10px;
   margin-top: 10px;
 }
 
 .bond-box {
-  flex: 0 0 calc(33.33% - 20px); /* Three boxes per row */
   padding: 10px;
   border: 1px solid #ddd;
   background-color: #fff;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
 }
 
 /* Styles for the selected date */
